@@ -1,0 +1,40 @@
+<div class="bg-gray-light border-bottom border-gray-light">
+  <div class="container text-center py-5 mb-4">
+    <img src="https://uploads-ssl.webflow.com/5f2c6dba183e4e456dfef9ac/601bbc5b16829062d224bf9c_Asset%2018%402x.png"
+      class="w-100 img-fluid" style="filter: invert(1); max-width: 350px;" />
+    <div class="mt-3 mb-4">
+      <h1 class="h1 mb-0">Twilio Verify API</h1>
+    </div>
+    {{#if isSent}}
+      <form id="form" action="/check" method="post"
+        class="form-inline d-flex align-items-center justify-content-center">
+        {{#if phone}}
+          <input type="hidden" name="phone" value="{{phone}}" />
+        {{/if}}
+        <input type="text" name="otp" id="otp" class="form-control mr-2">
+        <button class="btn btn-outline-dark" type="submit">Submit</button>
+      </form>
+    {{else}}
+      <form id="form" action="/" method="post" class="form-inline d-flex align-items-center justify-content-center">
+        {{#if phone}}
+          <input type="text" name="phone" id="phone" class="form-control mr-2" value="{{phone}}">
+        {{else}}
+          <input type="text" name="phone" id="phone" class="form-control mr-2">
+        {{/if}}
+        <button class="btn btn-outline-dark" type="submit">Send OTP</button>
+      </form>
+    {{/if}}
+  </div>
+</div>
+
+{{#if check}}
+  <div class="container py-2 my-4" style="max-width: 980px;">
+    <div class="p-2 mb-4">
+      <div class="row">
+        <div class="col-md text-center">
+          <h4>Verification Result: {{check}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
