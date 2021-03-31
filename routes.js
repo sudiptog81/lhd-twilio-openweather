@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/check', async (req, res) => {
+router.post('/check', (req, res) => {
   client
     .verify
     .services(process.env.TWILIO_VERIFY_SERVICE_ID)
@@ -36,7 +36,7 @@ router.post('/check', async (req, res) => {
     .create({to: req.body.phone, code: req.body.otp})
     .then(v => {
       if (v.status == 'approved')
-        res.render('main', { layout: 'index', check: 'Success' });
+        res.render('main', { layout: 'index', check: 'Success', phone: req.body.phone });
       else
         res.render('main', { layout: 'index', isSent: true, phone: req.body.phone, check: 'Failure. Try Again.' });
     })
@@ -44,6 +44,22 @@ router.post('/check', async (req, res) => {
       console.error(err);
       res.render('main', { layout: 'index', error: err });
     });
+});
+
+router.post('/weather', async (req, res) => {
+  const response = await axios.get('https://api.openweathermap.org/data/2.5/onecall', { 
+    params: {
+      lat: req.body.lat,
+      lon: req.body.lon,
+      appid: process.env.WEATHER_API_KEY,
+      exclude: 'minutely,hourly'
+    }
+  });
+  const data = response.data;
+  data.current.tempC = Math.round((data.current.temp - 273.15) * 100) / 100;
+  data.current.tempF = Math.round((1.8 * (data.current.temp - 273.15) + 32) * 100) / 100;
+  console.log(data.current.weather)
+  res.render('main', { layout: 'index', check: 'Success', phone: req.body.phone, data });
 });
 
 module.exports = router;
